@@ -1,5 +1,16 @@
-package main 
+package main
 
+import (
+	"context"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/kasyap1234/portfolio/server/config"
+	"github.com/labstack/echo"
+)
 
 func main(){
 	   cfg := config.GetConfig()
@@ -27,5 +38,4 @@ func main(){
     }
     
     log.Print("server stopped")
-}
 }

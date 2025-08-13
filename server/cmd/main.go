@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/kasyap1234/portfolio/server/config"
 	"github.com/knadh/koanf/v2"
 	"github.com/labstack/echo"
 )
@@ -17,9 +18,11 @@ var k = koanf.New(".")
 func main() {
 	e := echo.New()
 	quit := make(chan os.Signal, 1)
+	cfg := config.GetConfig()
+
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
-		e.Start(":" + k.Int(server.port))
+		e.Start(":" + k.String(cfg.Server.Host))
 
 	}()
 	<-quit

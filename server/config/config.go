@@ -29,7 +29,7 @@ func LoadConfig() {
 func GetConfig() *Config {
 	var c Config
 	if err := k.Unmarshal("", &c); err != nil {
-		log.Fatal("error unmarshalling error %v", err)
+		log.Fatal("error unmarshalling error %w", err)
 	}
 	return &c
 }
