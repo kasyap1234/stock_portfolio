@@ -7,6 +7,7 @@ require (
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.2.2
 	github.com/labstack/echo v3.3.10+incompatible
+	github.com/rs/zerolog v1.34.0
 )
 
 require (
