@@ -5,16 +5,15 @@ import (
 	"time"
 
 	"github.com/rs/zerolog"
-
 )
 
 type Logger struct {
 	logger *zerolog.Logger
 }
 
-func NewLogger(serviceName string,environment string)*Logger{
+func NewLogger(serviceName string, environment string) *Logger {
 	output := zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: time.RFC3339}
-	logger := zerolog.New(output).With().Timestamp().Str("service",serviceName).Str("environment",environment).Logger()
+	logger := zerolog.New(output).With().Timestamp().Str("service", serviceName).Str("environment", environment).Logger()
 	// Set log level based on environment
 	switch environment {
 	case "production":
@@ -27,5 +26,5 @@ func NewLogger(serviceName string,environment string)*Logger{
 		logger = logger.Level(zerolog.InfoLevel)
 	}
 
-	return &Logger{logger: logger}
+	return &Logger{logger: &logger}
 }
