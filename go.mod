@@ -3,11 +3,19 @@ module github.com/kasyap1234/portfolio
 go 1.24.5
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.3.0
+	github.com/jackc/pgx/v5 v5.7.5
 	github.com/knadh/koanf/parsers/yaml v1.1.0
 	github.com/knadh/koanf/providers/file v1.2.0
 	github.com/knadh/koanf/v2 v2.2.2
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/rs/zerolog v1.34.0
+)
+
+require (
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/rogpeppe/go-internal v1.14.1 // indirect
 )
 
 require (
