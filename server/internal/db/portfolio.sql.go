@@ -3,7 +3,7 @@
 //   sqlc v1.29.0
 // source: portfolio.sql
 
-package portfolio
+package db
 
 import (
 	"context"
@@ -14,12 +14,11 @@ import (
 
 const createPortfolio = `-- name: CreatePortfolio :one
 INSERT INTO portfolio (
-    id,user_id,name,invested_value,current_value
-) VALUES ($1,$2,$3,$4,$5) RETURNING id,user_id,name,invested_value,current_value,created_at,updated_at
+user_id,name,invested_value,current_value
+) VALUES ($1,$2,$3,$4) RETURNING id,user_id,name,invested_value,current_value,created_at,updated_at
 `
 
 type CreatePortfolioParams struct {
-	ID            uuid.UUID   `json:"id"`
 	UserID        uuid.UUID   `json:"user_id"`
 	Name          string      `json:"name"`
 	InvestedValue pgtype.Text `json:"invested_value"`
@@ -28,7 +27,6 @@ type CreatePortfolioParams struct {
 
 func (q *Queries) CreatePortfolio(ctx context.Context, arg CreatePortfolioParams) (Portfolio, error) {
 	row := q.db.QueryRow(ctx, createPortfolio,
-		arg.ID,
 		arg.UserID,
 		arg.Name,
 		arg.InvestedValue,

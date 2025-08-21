@@ -32,65 +32,65 @@ sql:
             go_type: "time.Time"
           - db_type: "date"
             go_type: "time.Time"
-  - engine: "postgresql"
-    schema: "server/internal/sql/migrations"
-    queries: "server/internal/sql/queries/portfolio/portfolio.sql"
-    gen:
-      go:
-        package: "portfolio"
-        out: "server/internal/db/portfolio"
-        sql_package: "pgx/v5"
-        emit_interface: true
-        emit_json_tags: true
-        emit_empty_slices: true
-        emit_pointers_for_null_types: false
-        overrides:
-          - db_type: "text"
-            go_type: "string"
-          - db_type: "character varying"
-            go_type: "string"
-          - db_type: "uuid"
-            go_type: "github.com/google/uuid.UUID"
-          - db_type: "numeric"
-            go_type: "float64"
-          - db_type: "int4"
-            go_type: "int32"
-          - db_type: "int8"
-            go_type: "int64"
-          - db_type: "timestamp"
-            go_type: "time.Time"
-          - db_type: "timestamptz"
-            go_type: "time.Time"
-          - db_type: "date"
-            go_type: "time.Time"
-  - engine: "postgresql"
-    schema: "server/internal/sql/migrations"
-    queries: "server/internal/sql/queries/stocks/stocks.sql"
-    gen:
-      go:
-        package: "stocks"
-        out: "server/internal/db/stocks"
-        sql_package: "pgx/v5"
-        emit_interface: true
-        emit_json_tags: true
-        emit_empty_slices: true
-        emit_pointers_for_null_types: false
-        overrides:
-          - db_type: "text"
-            go_type: "string"
-          - db_type: "character varying"
-            go_type: "string"
-          - db_type: "uuid"
-            go_type: "github.com/google/uuid.UUID"
-          - db_type: "numeric"
-            go_type: "float64"
-          - db_type: "int4"
-            go_type: "int32"
-          - db_type: "int8"
-            go_type: "int64"
-          - db_type: "timestamp"
-            go_type: "time.Time"
-          - db_type: "timestamptz"
-            go_type: "time.Time"
-          - db_type: "date"
-            go_type: "time.Time"
+  # - engine: "postgresql"
+  #   schema: "server/internal/sql/migrations"
+  #   queries: "server/internal/sql/queries/portfolio/portfolio.sql"
+  #   gen:
+  #     go:
+  #       package: "portfolio"
+  #       out: "server/internal/db/portfolio"
+  #       sql_package: "pgx/v5"
+  #       emit_interface: true
+  #       emit_json_tags: true
+  #       emit_empty_slices: true
+  #       emit_pointers_for_null_types: false
+  #       overrides:
+  #         - db_type: "text"
+  #           go_type: "string"
+  #         - db_type: "character varying"
+  #           go_type: "string"
+  #         - db_type: "uuid"
+  #           go_type: "github.com/google/uuid.UUID"
+  #         - db_type: "numeric"
+  #           go_type: "float64"
+  #         - db_type: "int4"
+  #           go_type: "int32"
+  #         - db_type: "int8"
+  #           go_type: "int64"
+  #         - db_type: "timestamp"
+  #           go_type: "time.Time"
+  #         - db_type: "timestamptz"
+  #           go_type: "time.Time"
+  #         - db_type: "date"
+  #           go_type: "time.Time"
+  # - engine: "postgresql"
+  #   schema: "server/internal/sql/migrations"
+  #   queries: "server/internal/sql/queries/stocks/stocks.sql"
+  #   gen:
+  #     go:
+  #       package: "stocks"
+  #       out: "server/internal/db/stocks"
+  #       sql_package: "pgx/v5"
+  #       emit_interface: true
+  #       emit_json_tags: true
+  #       emit_empty_slices: true
+  #       emit_pointers_for_null_types: false
+  #       overrides:
+  #         - db_type: "text"
+  #           go_type: "string"
+  #         - db_type: "character varying"
+  #           go_type: "string"
+  #         - db_type: "uuid"
+  #           go_type: "github.com/google/uuid.UUID"
+  #         - db_type: "numeric"
+  #           go_type: "float64"
+  #         - db_type: "int4"
+  #           go_type: "int32"
+  #         - db_type: "int8"
+  #           go_type: "int64"
+  #         - db_type: "timestamp"
+  #           go_type: "time.Time"
+  #         - db_type: "timestamptz"
+  #           go_type: "time.Time"
+  #         - db_type: "date"
+  #           go_type: "time.Time"

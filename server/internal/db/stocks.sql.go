@@ -3,7 +3,7 @@
 //   sqlc v1.29.0
 // source: stocks.sql
 
-package stocks
+package db
 
 import (
 	"context"

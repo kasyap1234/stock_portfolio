@@ -9,8 +9,12 @@ import (
 )
 
 type Querier interface {
+	AddStock(ctx context.Context, arg AddStockParams) (Stock, error)
+	CreatePortfolio(ctx context.Context, arg CreatePortfolioParams) (Portfolio, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
+	DeleteStock(ctx context.Context, arg DeleteStockParams) error
 	GetUserByEmail(ctx context.Context, email string) (User, error)
+	UpdateStock(ctx context.Context, arg UpdateStockParams) (Stock, error)
 }
 
 var _ Querier = (*Queries)(nil)
