@@ -1,6 +1,8 @@
 package store
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/kasyap1234/portfolio/server/internal/db"
@@ -9,22 +11,22 @@ import (
 )
 
 type PortfolioStore interface {
-CreatePortfolio(user_id uuid.UUID,name string,invested_value string , current_value string)(*models.Portfolio,error)
+CreatePortfolio(ctx context.Context,user_id uuid.UUID,name string,invested_value string , current_value string)(*models.Portfolio,error)
 }
 
 type portfolioStore  struct {
 	q *db.Queries
 }
 
-func(p*portfolioStore)CreatePortfolio(user_id uuid.UUID,name,invested_value,current_value string)(*models.Portfolio,error){
-	args := portfolio.CreatePortfolioParams{
+func(p*portfolioStore)CreatePortfolio(ctx context.Context,user_id uuid.UUID,name,invested_value,current_value string)(*models.Portfolio,error){
+	args := db.CreatePortfolioParams{
 		UserID: user_id,
 		Name: name,
 		InvestedValue: pgtype.Text{String: invested_value},
 		CurrentValue: pgtype.Text{String: current_value},
 
 	}
-	folio,err :=portfolio.Queries.CreatePortfolio(
-		
-	)
+	folio,err :=p.q.CreatePortfolio(ctx,args)
+	 
+
 }
