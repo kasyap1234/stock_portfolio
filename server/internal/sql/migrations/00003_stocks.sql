@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS stocks(
     purchase_price NUMERIC NOT NULL,
     purchase_date DATE NOT NULL, 
     created_at TIMESTAMPTZ DEFAULT now(),
-    updated_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
     );
 -- +goose StatementEnd
 
