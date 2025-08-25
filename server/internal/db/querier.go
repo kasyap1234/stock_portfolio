@@ -17,7 +17,7 @@ type Querier interface {
 	DeleteStock(ctx context.Context, arg DeleteStockParams) error
 	GetUserByEmail(ctx context.Context, email string) (User, error)
 	ListPortfolio(ctx context.Context, userID uuid.UUID) ([]ListPortfolioRow, error)
-	UpdateStock(ctx context.Context, arg UpdateStockParams) (Stock, error)
+	UpdateStock(ctx context.Context, arg UpdateStockParams) (UpdateStockRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

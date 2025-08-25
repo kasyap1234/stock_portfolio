@@ -14,7 +14,7 @@ SET
     name = COALESCE($5, name),
     quantity = COALESCE($6, quantity),
     purchase_price = COALESCE($7, purchase_price),
-    purchase_date = COALESCE($8, purchase_date),
+
     updated_at = now()
 WHERE id = $1 AND portfolio_id = $2 AND user_id = $3
-RETURNING id, portfolio_id, user_id, symbol, name, quantity, purchase_price, purchase_date, created_at, updated_at;
+RETURNING id, portfolio_id, user_id, symbol, name, quantity, purchase_price, created_at, updated_at;
