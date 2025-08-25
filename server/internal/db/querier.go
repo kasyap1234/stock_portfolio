@@ -6,6 +6,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
@@ -14,6 +16,7 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	DeleteStock(ctx context.Context, arg DeleteStockParams) error
 	GetUserByEmail(ctx context.Context, email string) (User, error)
+	ListPortfolio(ctx context.Context, userID uuid.UUID) ([]ListPortfolioRow, error)
 	UpdateStock(ctx context.Context, arg UpdateStockParams) (Stock, error)
 }
 

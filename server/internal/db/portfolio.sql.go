@@ -44,3 +44,41 @@ func (q *Queries) CreatePortfolio(ctx context.Context, arg CreatePortfolioParams
 	)
 	return i, err
 }
+
+const listPortfolio = `-- name: ListPortfolio :many
+SELECT id,user_id,name,invested_value,current_value FROM portfolio where user_id=$1
+`
+
+type ListPortfolioRow struct {
+	ID            uuid.UUID   `json:"id"`
+	UserID        uuid.UUID   `json:"user_id"`
+	Name          string      `json:"name"`
+	InvestedValue pgtype.Text `json:"invested_value"`
+	CurrentValue  pgtype.Text `json:"current_value"`
+}
+
+func (q *Queries) ListPortfolio(ctx context.Context, userID uuid.UUID) ([]ListPortfolioRow, error) {
+	rows, err := q.db.Query(ctx, listPortfolio, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListPortfolioRow{}
+	for rows.Next() {
+		var i ListPortfolioRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Name,
+			&i.InvestedValue,
+			&i.CurrentValue,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

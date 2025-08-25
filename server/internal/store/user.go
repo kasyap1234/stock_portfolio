@@ -2,7 +2,9 @@ package store
 
 import (
 	"context"
+	"strconv"
 
+	"github.com/google/uuid"
 	"github.com/kasyap1234/portfolio/server/internal/db"
 	"github.com/kasyap1234/portfolio/server/internal/models"
 )
@@ -10,6 +12,8 @@ import (
 type UserStore interface {
 	CreateUser(ctx context.Context, user *models.User) (db.User, error)
 	GetUserByEmail(ctx context.Context, email string) (db.User, error)
+	
+	
 }
 
 type userStore struct {
@@ -18,7 +22,7 @@ type userStore struct {
 
 func (u *userStore) CreateUser(ctx context.Context, user *models.User) (db.User, error) {
 	args := db.CreateUserParams{
-		ID:       int32(user.ID),
+		ID:       uuid.MustParse(strconv.Itoa(user.ID)),
 		Name:     user.Name,
 		Email:    user.Email,
 		Password: user.Password,
