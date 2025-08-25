@@ -8,8 +8,8 @@ import (
 )
 
 type UserStore interface {
-	CreateUser(ctx context.Context, user *models.User) (db.User, error)
-	GetUserByEmail(ctx context.Context, email string) (db.User, error)
+	CreateUser(ctx context.Context, user *models.User) (*models.User, error)
+	GetUserByEmail(ctx context.Context, email string) (*models.User, error)
 }
 
 type userStore struct {
