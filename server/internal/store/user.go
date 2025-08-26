@@ -28,7 +28,7 @@ func (u *userStore) CreateUser(ctx context.Context, user db.User) (*models.User,
 		return &models.User{}, err
 	}
 	modelUser := &models.User{
-		ID:       int(user.ID.ID()),
+		ID:       user.ID,
 		Name:     user.Name,
 		Email:    user.Email,
 		Password: user.Password,
@@ -43,7 +43,7 @@ func (u *userStore) GetUserByEmail(ctx context.Context, email string) (*models.U
 		return &models.User{}, err
 	}
 	modelUser := &models.User{
-		ID:       int(dbUser.ID.ID()),
+		ID:       dbUser.ID,
 		Name:     dbUser.Name,
 		Email:    dbUser.Email,
 		Password: dbUser.Password,

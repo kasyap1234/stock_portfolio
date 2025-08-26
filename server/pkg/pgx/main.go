@@ -1,13 +1,12 @@
 package pgxhelpers
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"math/big"
-"errors"
+
 	"github.com/jackc/pgx/v5/pgtype"
-	"math/big"
-	
 )
 
 // FloatToNumeric2Decimal converts a float64 to pgtype.Numeric with 2 decimal places
@@ -53,7 +52,6 @@ func NumericToIntFast(num pgtype.Numeric) int64 {
 	}
 	return i.Int64
 }
-
 
 // NumericToFloat converts pgtype.Numeric to float64
 func NumericToFloat(num pgtype.Numeric) (float64, error) {

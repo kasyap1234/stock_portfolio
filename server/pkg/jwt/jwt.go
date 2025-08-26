@@ -8,6 +8,7 @@ import (
 	"time"
 
 	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 var (
@@ -55,12 +56,12 @@ func InitKeys() error {
 }
 
 type Claims struct {
-	UserID   int
+	UserID   uuid.UUID
 	Username string
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID int, username string) (string, error) {
+func GenerateJWT(userID uuid.UUID, username string) (string, error) {
 	claims := Claims{
 		UserID:   userID,
 		Username: username,
