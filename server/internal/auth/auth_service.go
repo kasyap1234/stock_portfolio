@@ -60,7 +60,7 @@ func (a *authService) VerifyEmail(ctx context.Context, email string) (bool, erro
 
 // login response struct for loginuser service response message .
 type LoginResponse struct {
-	user  *models.UserResponse `json:"user"`
+	User  *models.UserResponse `json:"user"`
 	Token string               `json:"token"`
 }
 
