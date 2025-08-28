@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,6 +13,8 @@ import (
 	"github.com/kasyap1234/portfolio/server/pkg/email"
 	jwtkeys "github.com/kasyap1234/portfolio/server/pkg/jwt"
 	"github.com/kasyap1234/portfolio/server/pkg/security"
+
+	redis "github.com/redis/go-redis/v9"
 )
 
 // exposes auth service methods
@@ -22,7 +25,8 @@ type AuthService interface {
 }
 
 type authService struct {
-	store store.AuthStore
+	store       store.AuthStore
+
 }
 
 func NewAuthService(store store.AuthStore) AuthService {
@@ -101,4 +105,9 @@ func (a *authService) LoginUser(ctx context.Context, user *models.User) (*LoginR
 		CreatedAt: dbUser.CreatedAt.Time.Format(time.RFC3339),
 	}
 	return &LoginResponse{userResponse, token}, nil
+}
+
+func (a *authService) storeEmailVerificationToken(ctx context.Context, email, token string, userID uuid.UUID) error {
+	key := fmt.Sprintf("email_verification_token:%s", email, token)
+	return a.redisClient.Set
 }
