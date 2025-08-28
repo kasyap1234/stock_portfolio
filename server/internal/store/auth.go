@@ -37,4 +37,6 @@ func (a *authStore) GetUserByEmail(ctx context.Context, email string) (db.User, 
 	return a.q.GetUserByEmail(ctx, email)
 }
 
-func(a*authStore)LoginUser(ctx context.Context,user db.User)(db.User,error){}
+func (a *authStore) LoginUser(ctx context.Context, user db.User) (db.User, error) {
+	return db.User{}, nil
+}

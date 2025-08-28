@@ -5,9 +5,11 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/kasyap1234/portfolio/server/internal/db"
 	"github.com/kasyap1234/portfolio/server/internal/models"
 	"github.com/kasyap1234/portfolio/server/internal/store"
+	"github.com/kasyap1234/portfolio/server/pkg/email"
 	jwtkeys "github.com/kasyap1234/portfolio/server/pkg/jwt"
 	"github.com/kasyap1234/portfolio/server/pkg/security"
 )
@@ -32,9 +34,12 @@ func (a *authService) RegisterUser(ctx context.Context, user *models.User) (*mod
 		return nil, errors.New("email or password cannot be empty")
 	}
 	hashedPassword, err := security.HashPassword(user.Password)
-
+	if err != nil {
+		return &models.UserResponse{}, err
+	}
 	// Convert domain → db
 	dbUser := db.User{
+		ID:       uuid.New(),
 		Email:    user.Email,
 		Password: hashedPassword,
 		Name:     user.Name,
@@ -44,18 +49,26 @@ func (a *authService) RegisterUser(ctx context.Context, user *models.User) (*mod
 	if err != nil {
 		return nil, err
 	}
-
+	err = email.SendTokenEmail(email.GenerateEmailToken(), user.Email)
+	if err != nil {
+		return &models.UserResponse{}, err
+	}
+	check, err := a.VerifyEmail(ctx, user.Email)
+	if err != nil {
+		check = false
+	}
 	// Convert db → domain
 	return &models.UserResponse{
-		ID:    createdUser.ID,
-		Email: createdUser.Email,
-		Name:  createdUser.Name,
+		ID:            createdUser.ID,
+		Email:         createdUser.Email,
+		Name:          createdUser.Name,
+		EmailVerified: check,
 	}, nil
 }
 
 func (a *authService) VerifyEmail(ctx context.Context, email string) (bool, error) {
 	// verify email service function
-
+	return true, nil
 }
 
 // login response struct for loginuser service response message .
