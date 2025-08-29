@@ -21,7 +21,7 @@ import (
 // exposes auth service methods
 type AuthService interface {
 	RegisterUser(ctx context.Context, user *models.User) (*models.UserResponse, error)
-	VerifyEmail(ctx context.Context, email string) (bool, error)
+	VerifyEmail(ctx context.Context, email string, token string) (bool, error)
 	LoginUser(ctx context.Context, user *models.User) (*LoginResponse, error)
 }
 
