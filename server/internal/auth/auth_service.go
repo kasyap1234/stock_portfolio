@@ -14,7 +14,6 @@ import (
 	"github.com/kasyap1234/portfolio/server/pkg/email"
 	jwtkeys "github.com/kasyap1234/portfolio/server/pkg/jwt"
 	"github.com/kasyap1234/portfolio/server/pkg/security"
-
 	redis "github.com/kasyap1234/portfolio/server/pkg/redis"
 )
 

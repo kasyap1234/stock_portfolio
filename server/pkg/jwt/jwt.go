@@ -9,11 +9,19 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
+	jwtkeys "github.com/kasyap1234/portfolio/server/pkg/jwt"
 )
 
 var (
 	privateKey *rsa.PrivateKey
 	publicKey  *rsa.PublicKey
+)
+
+type TokenType string
+
+const (
+	AccessToken  TokenType = "access"
+	RefreshToken TokenType = "refresh"
 )
 
 // InitKeys loads RSA private and public keys from PEM files
@@ -61,12 +69,20 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID uuid.UUID, username string) (string, error) {
+func GenerateJWT(userID uuid.UUID, username string, typ jwtkeys.AccessToken) (string, error) {
+	var expires time.Time
+
+	switch typ {
+	case jwtkeys.AccessToken:
+		expires = time.Now().Add(15 * time.Hour)
+	case jwtkeys.RefreshToken:
+		expires = time.Now().Add(24 * 15 * time.Hour)
+	}
 	claims := Claims{
 		UserID:   userID,
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			ExpiresAt: jwt.NewNumericDate(expires),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 	}
