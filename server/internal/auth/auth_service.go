@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -14,7 +15,7 @@ import (
 	jwtkeys "github.com/kasyap1234/portfolio/server/pkg/jwt"
 	"github.com/kasyap1234/portfolio/server/pkg/security"
 
-	redis "github.com/redis/go-redis/v9"
+	redis "github.com/kasyap1234/portfolio/server/pkg/redis"
 )
 
 // exposes auth service methods
@@ -26,11 +27,11 @@ type AuthService interface {
 
 type authService struct {
 	store       store.AuthStore
-
+	redisClient redis.RedisClient
 }
 
-func NewAuthService(store store.AuthStore) AuthService {
-	return &authService{store: store}
+func NewAuthService(store store.AuthStore, redisClient redis.RedisClient) AuthService {
+	return &authService{store: store, redisClient: redisClient}
 }
 
 func (a *authService) RegisterUser(ctx context.Context, user *models.User) (*models.UserResponse, error) {
@@ -53,11 +54,19 @@ func (a *authService) RegisterUser(ctx context.Context, user *models.User) (*mod
 	if err != nil {
 		return nil, err
 	}
-	err = email.SendTokenEmail(email.GenerateEmailToken(), user.Email)
+	token := email.GenerateEmailToken()
+
+	err = email.SendTokenEmail(token, user.Email)
 	if err != nil {
 		return &models.UserResponse{}, err
 	}
-	check, err := a.VerifyEmail(ctx, user.Email)
+	err = a.StoreEmailVerificationToken(ctx, user.Email, token)
+	if err != nil {
+		log.Printf("failed to store email verification token in redis cache")
+	}
+
+	check, err := a.VerifyEmail(ctx, user.Email, token)
+
 	if err != nil {
 		check = false
 	}
@@ -70,9 +79,14 @@ func (a *authService) RegisterUser(ctx context.Context, user *models.User) (*mod
 	}, nil
 }
 
-func (a *authService) VerifyEmail(ctx context.Context, email string) (bool, error) {
+func (a *authService) VerifyEmail(ctx context.Context, email string, token string) (bool, error) {
 	// verify email service function
-	return true, nil
+	dbToken, err := a.GetEmailToken(ctx, email)
+	if dbToken == token {
+		return true, nil
+	}
+
+	return false, err
 }
 
 // login response struct for loginuser service response message .
@@ -107,7 +121,29 @@ func (a *authService) LoginUser(ctx context.Context, user *models.User) (*LoginR
 	return &LoginResponse{userResponse, token}, nil
 }
 
-func (a *authService) storeEmailVerificationToken(ctx context.Context, email, token string, userID uuid.UUID) error {
-	key := fmt.Sprintf("email_verification_token:%s", email, token)
-	return a.redisClient.Set
+func (a *authService) StoreEmailVerificationToken(ctx context.Context, email, token string) error {
+	key := fmt.Sprintf("email_verification_token:%s", token)
+	StatusCmd := a.redisClient.Set(ctx, key, token, time.Hour)
+	if err := StatusCmd.Err(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *authService) GetEmailToken(ctx context.Context, email string) (string, error) {
+	// Use the same key format as in storeEmailVerificationToken
+	key := fmt.Sprintf("email_verification_token:%s", email)
+
+	stringCmd := a.redisClient.Get(ctx, key)
+	if err := stringCmd.Err(); err != nil {
+		return "", err
+	}
+
+	// Extract the actual token value
+	token, err := stringCmd.Result()
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }
