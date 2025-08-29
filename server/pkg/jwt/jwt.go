@@ -9,7 +9,7 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	jwtkeys "github.com/kasyap1234/portfolio/server/pkg/jwt"
+
 )
 
 var (
@@ -69,7 +69,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func GenerateJWT(userID uuid.UUID, username string, typ jwtkeys.AccessToken) (string, error) {
+func GenerateJWT(userID uuid.UUID, username string, typ TokenType) (string, error) {
 	var expires time.Time
 
 	switch typ {
@@ -112,3 +112,5 @@ func ParseJWT(tokenStr string) (*Claims, error) {
 
 	return claims, nil
 }
+
+func GenerateTo

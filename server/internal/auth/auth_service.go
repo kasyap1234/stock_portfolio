@@ -13,8 +13,8 @@ import (
 	"github.com/kasyap1234/portfolio/server/internal/store"
 	"github.com/kasyap1234/portfolio/server/pkg/email"
 	jwtkeys "github.com/kasyap1234/portfolio/server/pkg/jwt"
-	"github.com/kasyap1234/portfolio/server/pkg/security"
 	redis "github.com/kasyap1234/portfolio/server/pkg/redis"
+	"github.com/kasyap1234/portfolio/server/pkg/security"
 )
 
 // exposes auth service methods
@@ -22,6 +22,7 @@ type AuthService interface {
 	RegisterUser(ctx context.Context, user *models.User) (*models.UserResponse, error)
 	VerifyEmail(ctx context.Context, email string, token string) (bool, error)
 	LoginUser(ctx context.Context, user *models.User) (*LoginResponse, error)
+	LogoutUser(ctx context.Context, token string) error
 }
 
 type authService struct {
@@ -107,7 +108,8 @@ func (a *authService) LoginUser(ctx context.Context, user *models.User) (*LoginR
 		return nil, errors.New("invalid credentials")
 	}
 
-	token, err := jwtkeys.GenerateJWT(dbUser.ID, dbUser.Email)
+	accessToken, err := jwtkeys.GenerateJWT(dbUser.ID, dbUser.Email, jwtkeys.AccessToken)
+
 	if err != nil {
 		return nil, errors.New("failed to generate authentication token")
 	}
@@ -117,7 +119,7 @@ func (a *authService) LoginUser(ctx context.Context, user *models.User) (*LoginR
 		Name:      dbUser.Name,
 		CreatedAt: dbUser.CreatedAt.Time.Format(time.RFC3339),
 	}
-	return &LoginResponse{userResponse, token}, nil
+	return &LoginResponse{userResponse, accessToken}, nil
 }
 
 func (a *authService) StoreEmailVerificationToken(ctx context.Context, email, token string) error {
@@ -145,4 +147,12 @@ func (a *authService) GetEmailToken(ctx context.Context, email string) (string, 
 	}
 
 	return token, nil
+}
+
+func (a *authService) LogoutUser(ctx context.Context, token string) error {
+	claims, err := jwtkeys.ParseJWT(token)
+	if err != nil {
+		return errors.New("invalid token")
+	}
+	expiresAt := claims
 }
