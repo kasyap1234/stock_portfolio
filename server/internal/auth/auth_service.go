@@ -154,5 +154,5 @@ func (a *authService) LogoutUser(ctx context.Context, token string) error {
 	if err != nil {
 		return errors.New("invalid token")
 	}
-	expiresAt := claims
+	
 }

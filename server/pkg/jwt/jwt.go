@@ -1,6 +1,7 @@
 package jwtkeys
 
 import (
+	"context"
 	"crypto/rsa"
 	"fmt"
 	"io"
@@ -9,7 +10,6 @@ import (
 
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-
 )
 
 var (
@@ -73,9 +73,9 @@ func GenerateJWT(userID uuid.UUID, username string, typ TokenType) (string, erro
 	var expires time.Time
 
 	switch typ {
-	case jwtkeys.AccessToken:
+	case AccessToken:
 		expires = time.Now().Add(15 * time.Hour)
-	case jwtkeys.RefreshToken:
+	case RefreshToken:
 		expires = time.Now().Add(24 * 15 * time.Hour)
 	}
 	claims := Claims{
@@ -113,4 +113,6 @@ func ParseJWT(tokenStr string) (*Claims, error) {
 	return claims, nil
 }
 
-func GenerateTo
+func StoreRefreshToken(ctx context.Context, token string, userID uuid.UUID) {
+
+}

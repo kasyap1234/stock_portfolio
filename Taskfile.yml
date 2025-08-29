@@ -1,0 +1,65 @@
+version: '3'
+
+dotenv: ['.env']
+
+vars:
+  DB_HOST: '{{.DB_HOST | default "localhost"}}'
+  DB_PORT: '{{.DB_PORT | default "5432"}}'
+  DB_USER: '{{.DB_USER | default "portfolio_user"}}'
+  DB_PASSWORD: '{{.DB_PASSWORD | default "secure_password_here"}}'
+  DB_NAME: '{{.DB_NAME | default "portfolio_db"}}'
+  DB_SSLMODE: '{{.DB_SSLMODE | default "disable"}}'
+  MIGRATIONS_DIR: 'server/internal/sql/migrations'
+
+tasks:
+  # Create a new migration file
+  db:migrate:create:
+    desc: Create a new migration file
+    summary: |
+      Create a new database migration file.
+      Usage: task db:migrate:create name=migration_name
+    cmd: |
+      cd {{.MIGRATIONS_DIR}} && \
+      goose create {{.name}} sql
+
+  # Run migrations up
+  db:migrate:up:
+    desc: Run database migrations up
+    summary: |
+      Apply all pending database migrations to bring the database up to the latest state.
+      Usage: task db:migrate:up
+    cmd: |
+      goose postgres "postgres://{{.DB_USER}}:{{.DB_PASSWORD}}@{{.DB_HOST}}:{{.DB_PORT}}/{{.DB_NAME}}?sslmode={{.DB_SSLMODE}}" \
+      up {{.MIGRATIONS_DIR}}
+
+  # Run migrations down (rollback last migration)
+  db:migrate:down:
+    desc: Run database migration down
+    summary: |
+      Rollback the last applied database migration.
+      Usage: task db:migrate:down
+    cmd: |
+      goose postgres "postgres://{{.DB_USER}}:{{.DB_PASSWORD}}@{{.DB_HOST}}:{{.DB_PORT}}/{{.DB_NAME}}?sslmode={{.DB_SSLMODE}}" \
+      down {{.MIGRATIONS_DIR}}
+
+  # Show migration status
+  db:migrate:status:
+    desc: Show current migration status
+    summary: |
+      Display the current status of all migrations.
+      Usage: task db:migrate:status
+    cmd: |
+      goose postgres "postgres://{{.DB_USER}}:{{.DB_PASSWORD}}@{{.DB_HOST}}:{{.DB_PORT}}/{{.DB_NAME}}?sslmode={{.DB_SSLMODE}}" \
+      status {{.MIGRATIONS_DIR}}
+
+  # Reset all migrations
+  db:migrate:reset:
+    desc: Reset all migrations
+    summary: |
+      Reset all migrations by rolling back to version 0 and then running them back up.
+      Usage: task db:migrate:reset
+    cmd: |
+      goose postgres "postgres://{{.DB_USER}}:{{.DB_PASSWORD}}@{{.DB_HOST}}:{{.DB_PORT}}/{{.DB_NAME}}?sslmode={{.DB_SSLMODE}}" \
+      reset {{.MIGRATIONS_DIR}} && \
+      goose postgres "postgres://{{.DB_USER}}:{{.DB_PASSWORD}}@{{.DB_HOST}}:{{.DB_PORT}}/{{.DB_NAME}}?sslmode={{.DB_SSLMODE}}" \
+      up {{.MIGRATIONS_DIR}}
